@@ -1,22 +1,25 @@
 <template>
     <div>
 
-        <mt-swipe :auto="4000">
-            <mt-swipe-item v-for="item in swipeList" :key="item.id">
-                <img :src="item.img" alt="">
-                {{item.img}}
-            </mt-swipe-item>
-        </mt-swipe>
+        <swiper :swipeList="swipeList" :isFull="true"></swiper>
         <ul class="mui-table-view mui-grid-view mui-grid-9">
             <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
                 <router-link to="/home/newList">
                 <img src="../../images/menu1.png" alt="">
                 <div class="mui-media-body">新闻资讯</div>
                 </router-link></li>
-            <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3"><a href="#">
-                <img src="../../images/menu2.png" alt="">                <div class="mui-media-body">图片分享</div></a></li>
-            <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3"><a href="#">
-                <img src="../../images/menu3.png" alt="">                <div class="mui-media-body">商品购买</div></a></li>
+            <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+                <router-link to="/home/photolist">
+                <img src="../../images/menu2.png" alt="">
+                    <div class="mui-media-body">图片分享</div>
+                </router-link>
+            </li>
+            <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+                <router-link to="/home/goodlist">
+                <img src="../../images/menu3.png" alt="">
+                <div class="mui-media-body">商品购买</div>
+                </router-link>
+            </li>
             <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3"><a href="#">
                 <img src="../../images/menu4.png" alt="">                <div class="mui-media-body">留言反馈</div></a></li>
             <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3"><a href="#">
@@ -30,6 +33,7 @@
 
 <script>
     import { Toast } from "mint-ui";
+    import swiper from "../subComponents/swiper.vue";
     export default {
         data(){
             return{
@@ -50,29 +54,15 @@
                     }
                 });
             }
+        },
+        components:{
+            swiper
         }
     }
 </script>
 
 <style lang="scss" scoped>
-.mint-swipe{
-    height: 200px;
-    .mint-swipe-item{
-        &:nth-child(1){
-            background-color: red;
-        }
-        &:nth-child(2){
-            background-color: yellow;
-        }
-        &:nth-child(3){
-            background-color: blue;
-        }
-        img{
-            width: 100%;
-            height: 100%;
-        }
-    }
-}
+
 .mui-grid-view.mui-grid-9{
     background-color: white;
     border: none;

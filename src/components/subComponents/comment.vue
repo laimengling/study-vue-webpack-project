@@ -2,9 +2,9 @@
     <div class="cmt-container">
         <h3>发表评论</h3>
         <hr>
-        <textarea placeholder="请输入要评论的内容（最多评论120个字）" maxlength="120"></textarea>
+        <textarea placeholder="请输入要评论的内容（最多评论120个字）" maxlength="120" v-model="msg"></textarea>
 
-        <mt-button type="primary" size="large">发表评论</mt-button>
+        <mt-button type="primary" size="large" @click="postComment">发表评论</mt-button>
 
         <div class="cmt-list">
             <div class="cmt-item" v-for="( item,i ) in comments" :key="item.add_time">
@@ -27,7 +27,8 @@
         data:function () {
             return{
                 pageindex:1,
-                comments:[]
+                comments:[],
+                msg:""
             }
         },
         props:["artid"],
@@ -36,7 +37,7 @@
         },
         methods:{
             getComment(){
-                this.$http.get("api/getcomments/" + this.artid + "?pageindex=" + this.pageindex)
+                this.$http.get("http://www.liulongbin.top:3005/api/getcomments/" + this.artid + "?pageindex=" + this.pageindex)
                     .then(result => {
                         if (result.body.status === 0){
                             //为了防止 新数据 覆盖老数据的情况，我们在 点击加载更多的时候，
@@ -50,6 +51,24 @@
             addMore(){
                 this.pageIndex++;
                 this.getComment();
+            },
+            postComment(){
+                if(this.msg.trim().length === 0 ){
+                    return Toast("评论内容不可为空！")
+                }
+                this.$http.post("api/postcomment/" + this.$route.params.id,{
+                    content: this.msg.trim()
+                }).then(result =>{
+                    if( result.body.status === 0){
+                        var cmt={
+                            user_name: "匿名用户",
+                            add_time:Date.now(),
+                            content: this.msg.trim()
+                        };
+                        this.comments.unshift(cmt);
+                        this.msg="";
+                    }
+                });
             }
         }
     }
@@ -57,7 +76,7 @@
 
 <style scoped lang="scss">
 .cmt-container{
-    padding-bottom: 50px;
+
     h3{
         font-size: 18px;
     }
