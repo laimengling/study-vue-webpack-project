@@ -4,7 +4,7 @@
     但是最后一次肯定是一个合法的 max 数值-->
     <div class="mui-numbox" data-numbox-min="1" >
         <button class="mui-btn mui-btn-numbox-minus" type="button">-</button>
-        <input id="test" class="mui-input-numbox" type="number" value="5" @change="countChanged" ref="numbox">
+        <input id="test" class="mui-input-numbox" type="number" value="1" @change="countChanged" ref="numbox">
         <button class="mui-btn mui-btn-numbox-plus" type="button">+</button>
     </div>
 </template>
@@ -14,7 +14,7 @@
     export default {
 
         mounted() {
-            mui('mui-numbox').numbox();
+            mui('.mui-numbox').numbox();
         },
         props:["max"],
         methods:{

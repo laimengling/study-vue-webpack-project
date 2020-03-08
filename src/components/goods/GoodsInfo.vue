@@ -41,7 +41,23 @@
             </div>
 
         </div>
+        <!--
+           加入购物车：
+            vuex是Vue配套的 公共数据管理工具，他可以把一些共享的数据，保存到vuex中，
+            方便整个程序中的任何组件直接获取或修改我们的公共数据
 
+            理解：
+            1. 三层组件嵌套，在原始中，最外层组件获取最里层组件数据，需要中间组件传递，
+            但中间组件可能不需要该数据
+            2. 不同组件不存在父子关系，数据的传递
+            3. Vuex是为了保存 组件之间共享数据而诞生的，如果组件之间有要共享的数据，
+            可以直接挂载到vuex中，而不必通过 父子组件之间传值，如果 组件的数据不需要
+            共享。如果不需要共享的私有数据，没有必要放到vuex中；
+            4. ** 只有共享的数据，才有去哪里放到 vuex中，私有的数据只要放到组件的data
+             props 和 data 和vuex 的区别；
+            5. 结论：Vuex是一个全局的共享数据存储区域，就相当于是一个数据的仓库
+
+        -->
 
         <!--商品参数-->
         <div class="mui-card">
@@ -118,6 +134,10 @@
             },
             addToShopcar(){
                 this.ballFlag=!this.ballFlag;
+                //
+                var goodsinfo={id: this.id, count: this.selectNum, price: this.details.sell_price, selected: false};
+                //调用 store 中的mutations 来将商品加入购物车
+                this.$store.commit("addToCar" , goodsinfo);
             },
             beforeEnter(el){
                 el.style.transform="translate(0,0)";

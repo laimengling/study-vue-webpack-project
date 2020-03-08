@@ -27,6 +27,102 @@ import VuePreview from 'vue-preview'
 // defalut install
 Vue.use(VuePreview)
 
+//导入公共数据管理工具
+import  Vuex from "vuex";
+Vue.use(Vuex);
+
+var car = JSON.parse(localStorage.getItem("car")||'[]');
+var store = new Vuex.Store({
+   state:{//this.$store.state.***
+       car: car//购物车中的商品的数据，用于一个数组存储起来，在car 数组中，
+       // 存储一些商品的对象，咱们可以暂时将这个商品对象，设计成这个样子
+       // { id: 商品的id, count: 商品的数量, price: 商品的单价 , selected: 商品是否被选中}
+   },
+   mutations:{//this.$store.commit("方法名","按需传递唯一的参数")
+       addToCar(state,goodsinfo){
+           //点击加入购物车，把商品信息，保存到 store 中的 car
+           var flag = false;//判定是否找到该物品id
+           state.car.some(item =>{
+               if(item.id == goodsinfo.id){
+                   item.count += parseInt(goodsinfo.count);
+                   flag = true;
+                   return true;
+               }
+           });
+           if(!flag){
+               state.car.push(goodsinfo);
+           }
+
+           //当 更新 car 之后，把 car 数组，存储到 本地的 localstorage 中
+           localStorage.setItem("car",JSON.stringify(state.car));
+       },
+       updateGoodsCount(state,obj){
+           state.car.some( item=>{
+              if(item.id == obj.id){
+                  item.count = parseInt(obj.count);
+                  return true;
+              }
+           });
+           state.car=car;
+           localStorage.setItem("car",JSON.stringify(car));
+       },
+       removeFormCar(state,id){
+           state.car.some((item,i) => {
+               if(item.id = id){
+                   state.car.splice(i,1);
+                   return true;
+               }
+           });
+           localStorage.setItem("car",JSON.stringify(state.car));
+       },
+       updateGoodsSelected(state, info){
+           state.car.some(item =>{
+               if(item.id == info.id){
+                   item.selected=info.selected;
+               }
+           });
+           localStorage.setItem("car",JSON.stringify(state.car));
+       }
+   },
+   getters:{//this.$store.getters.**
+       //相当于计算属性， 也相当于 filters
+       getAllCount(state){
+           var c = 0;
+           state.car.forEach(item =>{
+               c += item.count;
+           });
+           return c;
+       },
+       getGoodsCount(state){
+           var o = {}
+           state.car.forEach(item => {
+               o[item.id] = item.count
+           })
+           return o
+       },
+       getGoodsSelect(state){
+           var o = {};
+           state.car.forEach(item => {
+              o[item.id]=item.selected;
+           });
+           return o;
+       },
+       getGoodsCountAndAmount(state){
+           var o = {
+               count:0,//勾选数量
+               amount:0
+           };
+           state.car.forEach(item => {
+               if(item.selected){
+                   o.count += item.count;
+                   o.amount += item.count * item.price;
+               }
+           });
+           return o;
+       }
+   }
+});
+
 // 导入 MUI 的样式
 import './lib/mui/css/mui.min.css'
 // 导入扩展图标样式
@@ -58,7 +154,8 @@ import app from './App.vue'
 var vm = new Vue({
     el: '#app',
     render: c => c(app),
-    router // 1.4 挂载路由对象到 VM 实例上
+    router, // 1.4 挂载路由对象到 VM 实例上
+    store
 })
 
 
